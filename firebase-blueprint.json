@@ -1,0 +1,100 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "User profile information",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "email": { "type": "string", "format": "email" },
+        "displayName": { "type": "string" },
+        "photoURL": { "type": "string" },
+        "youtubeConnected": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "email"]
+    },
+    "Project": {
+      "title": "Project",
+      "description": "A collection of videos for review",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "title"]
+    },
+    "Video": {
+      "title": "Video",
+      "description": "A video uploaded to YouTube for review",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "projectId": { "type": "string" },
+        "youtubeVideoId": { "type": "string" },
+        "title": { "type": "string" },
+        "duration": { "type": "number" },
+        "thumbnail": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["projectId", "youtubeVideoId", "title"]
+    },
+    "Comment": {
+      "title": "Comment",
+      "description": "A timestamped comment on a video",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "videoId": { "type": "string" },
+        "userId": { "type": "string" },
+        "userName": { "type": "string" },
+        "userPhoto": { "type": "string" },
+        "parentId": { "type": "string" },
+        "timestamp": { "type": "number" },
+        "content": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["videoId", "userId", "timestamp", "content"]
+    },
+    "ShareLink": {
+      "title": "ShareLink",
+      "description": "A secure link to share a project or video",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "targetId": { "type": "string" },
+        "targetType": { "type": "string", "enum": ["project", "video"] },
+        "token": { "type": "string" },
+        "passwordHash": { "type": "string" },
+        "expiresAt": { "type": "string", "format": "date-time" },
+        "permissionType": { "type": "string", "enum": ["view", "comment"] }
+      },
+      "required": ["targetId", "targetType", "token"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "User profile documents"
+    },
+    "/projects/{projectId}": {
+      "schema": "Project",
+      "description": "Project documents"
+    },
+    "/projects/{projectId}/videos/{videoId}": {
+      "schema": "Video",
+      "description": "Videos within a project"
+    },
+    "/videos/{videoId}/comments/{commentId}": {
+      "schema": "Comment",
+      "description": "Comments on a specific video"
+    },
+    "/shareLinks/{linkId}": {
+      "schema": "ShareLink",
+      "description": "Public sharing links"
+    }
+  }
+}
